@@ -2,159 +2,175 @@
 
 class PIDController
 {
-    private double setpoint, tolerance;
+    private double setpoint = 0;
+    private double tolerance = 0;
 
-    private double error;
-    private double integral;
-    private double derivative, previous_error;
+    private double error = 0;
+    private double integral = 0;
+    private double derivative = 0, 
+    private double previous_error = 0;
     
-    private double Kp, Ki, Kd, Kf;
+    private double Kp, Ki, Kd;
+    private double Kf = 0;
 
     public PIDController(double setpoint, double tolerance, double Kp, double Ki, double Kd, double Kf) 
     {
-        self.setpoint = setpoint;
-        self.tolerance = tolerance;
+        this.setpoint = setpoint;
+        this.tolerance = tolerance;
 
-        self.Kp = Kp;
-        self.Ki = Ki;
-        self.Kd = Kd;
+        this.Kp = Kp;
+        this.Ki = Ki;
+        this.Kd = Kd;
 
-        self.Kf = Kf;
+        this.Kf = Kf;
+    }
+
+    public PIDController(double setpoint, double, tolerance, double Kp, double Ki, double Kd) 
+    {
+        this.setpoint = setpoint;
+        
+        this.Kp = Kp;
+        this.Ki = Ki;
+        this.Kd = Kd;
     }
 
     public PIDController(double setpoint, double Kp, double Ki, double Kd) 
     {
-        self.setpoint = setpoint;
+        this.setpoint = setpoint;
         
-        self.Kp = Kp;
-        self.Ki = Ki;
-        self.Kd = Kd;
+        this.Kp = Kp;
+        this.Ki = Ki;
+        this.Kd = Kd;
     }
 
     public PIDController(double Kp, double Ki, double Kd) 
     {        
-        self.Kp = Kp;
-        self.Ki = Ki;
-        self.Kd = Kd;
+        this.Kp = Kp;
+        this.Ki = Ki;
+        this.Kd = Kd;
     }
 
     public double getP(double input)
     {
-        return (self.error = input - self.setpoint) * self.Kp;
+        return (this.error = input - this.setpoint) * this.Kp;
     }
     
-    public double getI()
+    public double getI(double input)
     {
-        return (self.integral = self.integral + self.error) * self.Ki;
+        this.error = input - this.setpoint
+        
+        return (this.integral = this.integral + this.error) * this.Ki;
     }
     
-    public double getD()
+    public double getD(double input)
     {
-        self.derivative = self.error - self.previous_error;
-        self.previous_error = self.error;
+        this.error = input - this.setpoint
 
-        return self.derivative * self.Kd;
+        this.derivative = this.error - this.previous_error;
+        this.previous_error = this.error;
+
+        return this.derivative * this.Kd;
     }
 
     public double getF()
     {
-        return self.Kf;
+        return this.Kf;
     }
     
-    public double getPI()
+    public double getPI(double input)
     {
-        return MathUtil.clamp(getP() + getI(), -1, 1);
+        return MathUtil.clamp(getP(input) + getI(input), -1, 1);
     }
 
-    public double getPD()
+    public double getPD(double input)
     {
-        return MathUtil.clamp(getP() + getD(), -1, 1);
+        return MathUtil.clamp(getP(input) + getD(input), -1, 1);
     }
 
-    public double getPF()
+    public double getPF(double input)
     {
-        return MathUtil.clamp(getP() + getF(), -1, 1);
+        return MathUtil.clamp(getP(input) + getF(input), -1, 1);
     }
 
-    public double getPID()
+    public double getPID(double input)
     {
-        return MathUtil.clamp(getP() + getI() + getD(), -1, 1);
+        return MathUtil.clamp(getP(input) + getI(input) + getD(input), -1, 1);
     }
 
-    public double getPIDF()
+    public double getPIDF(double input)
     {
-        return MathUtil.clamp(getP() + getI() + getD() + getF(), -1, 1);
+        return MathUtil.clamp(getP(input) + getI(input) + getD(input) + getF(), -1, 1);
     }
 
     public boolean atSetpoint()
     {
-        return Math.abs(self.error) <= self.tolerance; 
+        return Math.abs(this.error) <= this.tolerance; 
     }
 
     public void setSetpoint(double setpoint)
     {
-        self.setpoint = setpoint;
+        this.setpoint = setpoint;
     }
     
     public void setTolerance(double tolerance)
     {
-        self.tolerance = tolerance;
+        this.tolerance = tolerance;
     }
 
     public void setKp(double Kp)
     {
-        self.Kp = Kp;
+        this.Kp = Kp;
     }
 
     public void setKi(double Ki)
     {
-        self.Ki = Ki;
+        this.Ki = Ki;
     }
 
     public void setKd(double Kd)
     {
-        self.Kd = Kd;
+        this.Kd = Kd;
     }
 
     public void setKf(double Kf)
     {
-        self.Kf = Kf;
+        this.Kf = Kf;
     }
 
     public void setAll(double Kp, double Ki, double Kd)
     {
-        self.Kp = Kp;
-        self.Ki = Ki;
-        self.Kd = Kd;    
+        this.Kp = Kp;
+        this.Ki = Ki;
+        this.Kd = Kd;    
     }
 
     public double getSetpoint() 
     {
-        return self.setpoint;
+        return this.setpoint;
     }
 
     public double getTolerance() 
     {
-        return self.tolerance;
+        return this.tolerance;
     }
 
     public double getKp() 
     {
-        return self.Kp;
+        return this.Kp;
     }
 
     public double getKi() 
     {
-        return self.Ki;
+        return this.Ki;
     }
 
     public double getKd() 
     {
-        return self.Kd;
+        return this.Kd;
     }
 
     public double getKf() 
     {
-        return self.Kf;
+        return this.Kf;
     }
 }
