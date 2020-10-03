@@ -1,17 +1,15 @@
-// Your First Program
-
 class PIDController
 {
-    private double setpoint = 0;
-    private double tolerance = 0;
+    private double setpoint = 0d;
+    private double tolerance = 0d;
 
-    private double error = 0;
-    private double integral = 0;
-    private double derivative = 0, 
-    private double previous_error = 0;
+    private double error = 0d;
+    private double integral = 0d;
+    private double derivative = 0d; 
+    private double previous_error = 0d;
     
     private double Kp, Ki, Kd;
-    private double Kf = 0;
+    private double Kf = 0d;
 
     public PIDController(double setpoint, double tolerance, double Kp, double Ki, double Kd, double Kf) 
     {
@@ -25,7 +23,7 @@ class PIDController
         this.Kf = Kf;
     }
 
-    public PIDController(double setpoint, double, tolerance, double Kp, double Ki, double Kd) 
+    public PIDController(double setpoint, double tolerance, double Kp, double Ki, double Kd) 
     {
         this.setpoint = setpoint;
         
@@ -57,14 +55,14 @@ class PIDController
     
     public double getI(double input)
     {
-        this.error = input - this.setpoint
+        this.error = input - this.setpoint;
         
         return (this.integral = this.integral + this.error) * this.Ki;
     }
     
     public double getD(double input)
     {
-        this.error = input - this.setpoint
+        this.error = input - this.setpoint;
 
         this.derivative = this.error - this.previous_error;
         this.previous_error = this.error;
@@ -79,27 +77,27 @@ class PIDController
     
     public double getPI(double input)
     {
-        return MathUtil.clamp(getP(input) + getI(input), -1, 1);
+        return clamp(getP(input) + getI(input), -1, 1);
     }
 
     public double getPD(double input)
     {
-        return MathUtil.clamp(getP(input) + getD(input), -1, 1);
+        return clamp(getP(input) + getD(input), -1, 1);
     }
 
     public double getPF(double input)
     {
-        return MathUtil.clamp(getP(input) + getF(input), -1, 1);
+        return clamp(getP(input) + getF(), -1, 1);
     }
 
     public double getPID(double input)
     {
-        return MathUtil.clamp(getP(input) + getI(input) + getD(input), -1, 1);
+        return clamp(getP(input) + getI(input) + getD(input), -1, 1);
     }
 
     public double getPIDF(double input)
     {
-        return MathUtil.clamp(getP(input) + getI(input) + getD(input) + getF(), -1, 1);
+        return clamp(getP(input) + getI(input) + getD(input) + getF(), -1, 1);
     }
 
     public boolean atSetpoint()
@@ -172,5 +170,9 @@ class PIDController
     public double getKf() 
     {
         return this.Kf;
+    }
+    public static double clamp(double value, double low, double high) 
+    {
+        return Math.max(low, Math.min(value, high));
     }
 }
