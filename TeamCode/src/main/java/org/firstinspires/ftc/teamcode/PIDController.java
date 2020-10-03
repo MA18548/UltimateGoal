@@ -5,9 +5,13 @@ class PIDController
 
     private double error = 0d;
     private double integral = 0d;
+
     private double derivative = 0d; 
     private double previous_error = 0d;
     
+    private double dt;
+    private double previous_time = 0d;
+
     private double Kp, Ki, Kd;
     private double Kf = 0d;
 
@@ -57,7 +61,10 @@ class PIDController
     {
         this.error = input - this.setpoint;
         
-        return (this.integral = this.integral + this.error) * this.Ki;
+        this.dt = timer.time - this.previous_time;
+        this.previous_time = timer.time;
+
+        return (this.integral = this.integral + this.error) * this.Ki * this.dt;
     }
     
     public double getD(double input)
@@ -65,9 +72,12 @@ class PIDController
         this.error = input - this.setpoint;
 
         this.derivative = this.error - this.previous_error;
-        this.previous_error = this.error;
+        this.dt = timer.time - this.previous_time;
 
-        return this.derivative * this.Kd;
+        this.previous_error = this.error;
+        this.previous_time = timer.time;
+
+        return (this.derivative / this.dt) * this.Kd;
     }
 
     public double getF()
@@ -77,6 +87,7 @@ class PIDController
     
     public double getPI(double input)
     {
+        
         return clamp(getP(input) + getI(input), -1, 1);
     }
 
@@ -171,6 +182,7 @@ class PIDController
     {
         return this.Kf;
     }
+
     public static double clamp(double value, double low, double high) 
     {
         return Math.max(low, Math.min(value, high));
