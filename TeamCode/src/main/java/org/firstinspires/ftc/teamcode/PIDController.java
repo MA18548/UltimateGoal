@@ -2,13 +2,13 @@
 
 class PIDController
 {
-    double setpoint, tolerance;
+    private double setpoint, tolerance;
 
-    double error;
-    double integral;
-    double derivative, previous_error;
+    private double error;
+    private double integral;
+    private double derivative, previous_error;
     
-    double Kp, Ki, Kd, Kf;
+    private double Kp, Ki, Kd, Kf;
 
     public PIDController(double setpoint, double tolerance, double Kp, double Ki, double Kd, double Kf) 
     {
