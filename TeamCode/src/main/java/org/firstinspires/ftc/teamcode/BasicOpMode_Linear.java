@@ -32,7 +32,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -50,14 +53,19 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
+@TeleOp(name="Test: Testing Motors And Sensors", group="Linear Opmode")
 public class BasicOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
+
+    private PIDController pidController = null;
+
+    private ColorSensor colorSensor = null;
+
+    private DigitalChannel touchSensor = null;
 
     @Override
     public void runOpMode() {
@@ -70,10 +78,18 @@ public class BasicOpMode_Linear extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
+        pidController = new PIDController(10000, 10, 1, 1, 1);
+
+        colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        touchSensor = hardwareMap.get(DigitalChannel.class, "hall_effect");
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -86,24 +102,33 @@ public class BasicOpMode_Linear extends LinearOpMode {
             double leftPower;
             double rightPower;
 
+
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+//            double drive = -gamepad1.left_stick_y;
+//            double turn  =  gamepad1.right_stick_x;
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
+            leftPower  = gamepad1.left_stick_y;
+            rightPower = pidController.getPID(rightDrive.getCurrentPosition());
+            
+            rightDrive.setDirection(rightPower > 0 ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
+            rightDrive.setPower(Math.abs(rightPower));
+
+
+            telemetry.addData("ARGB", "alpha: (%.3f) red:(%.3f) green:(%.3f) blue:(%.3f)"
+            , (float) colorSensor.alpha(), (float) colorSensor.red(), (float) colorSensor.green(), (float) colorSensor.blue());
+
+            telemetry.addData("Encoder", "(%.4f)", (float) rightDrive.getCurrentPosition());
+
+            telemetry.addData("Hall Effect", "Value: " + (touchSensor.getState() ? "Touched" : "Not touched!"));
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
