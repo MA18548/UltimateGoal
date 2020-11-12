@@ -1,5 +1,11 @@
-class PIDController
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+public class PIDController
 {
+    private ElapsedTime timer;
+
     private double setpoint = 0d;
     private double tolerance = 0d;
 
@@ -17,6 +23,8 @@ class PIDController
 
     public PIDController(double setpoint, double tolerance, double Kp, double Ki, double Kd, double Kf) 
     {
+        this.timer = new ElapsedTime();
+
         this.setpoint = setpoint;
         this.tolerance = tolerance;
 
@@ -61,8 +69,8 @@ class PIDController
     {
         this.error = input - this.setpoint;
         
-        this.dt = timer.time - this.previous_time;
-        this.previous_time = timer.time;
+        this.dt = timer.milliseconds() - this.previous_time;
+        this.previous_time = timer.milliseconds();
 
         return (this.integral = this.integral + this.error) * this.Ki * this.dt;
     }
@@ -72,10 +80,10 @@ class PIDController
         this.error = input - this.setpoint;
 
         this.derivative = this.error - this.previous_error;
-        this.dt = timer.time - this.previous_time;
+        this.dt = timer.milliseconds() - this.previous_time;
 
         this.previous_error = this.error;
-        this.previous_time = timer.time;
+        this.previous_time = timer.milliseconds();
 
         return (this.derivative / this.dt) * this.Kd;
     }
