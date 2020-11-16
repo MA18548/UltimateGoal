@@ -37,6 +37,7 @@ public class PIDController
 
     public PIDController(double setpoint, double tolerance, double Kp, double Ki, double Kd)
     {
+        this.tolerance = tolerance;
         this.setpoint = setpoint;
         this.timer = new ElapsedTime();
 
@@ -64,30 +65,27 @@ public class PIDController
         this.Kd = Kd;
     }
 
-    public double getP(double input)
-    {
-        return (this.error = input - this.setpoint) * this.Kp;
-    }
+    public double getP(double input) { return (this.error = this.setpoint - input) * this.Kp; }
 
     public double getI(double input)
     {
-        this.error = input - this.setpoint;
+        //this.error = this.setpoint - input;
 
-        this.dt = timer.milliseconds() - this.previous_time;
-        this.previous_time = timer.milliseconds();
+        this.dt = timer.seconds() - this.previous_time;
+        this.previous_time = timer.seconds();
 
         return (this.integral = this.integral + this.error) * this.Ki * this.dt;
     }
 
     public double getD(double input)
     {
-        this.error = input - this.setpoint;
+        //this.error = this.setpoint - input;
 
         this.derivative = this.error - this.previous_error;
-        this.dt = timer.milliseconds() - this.previous_time;
+        //this.dt = timer.seconds() - this.previous_time;
 
         this.previous_error = this.error;
-        this.previous_time = timer.milliseconds();
+        this.previous_time = timer.seconds();
 
         return (this.derivative / this.dt) * this.Kd;
     }
@@ -115,7 +113,7 @@ public class PIDController
 
     public double getPID(double input)
     {
-        return clamp(getP(input) + getI(input) + getD(input), -1, 1);
+        return clamp(getP(input) + getI(input) + getD(input), -0.95, 0.95);
     }
 
     public double getPIDF(double input)
@@ -194,6 +192,8 @@ public class PIDController
     {
         return this.Kf;
     }
+
+    public double getError() { return this.error; }
 
     public static double clamp(double value, double low, double high)
     {

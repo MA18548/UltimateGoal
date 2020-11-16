@@ -78,15 +78,13 @@ public class BasicOpMode_Linear extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
-        pidController = new PIDController(10000, 10, 1, 1, 1);
+        pidController = new PIDController(10000, 100, 0.002, 0.00001, 0.0001);
 
         colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
         touchSensor = hardwareMap.get(DigitalChannel.class, "hall_effect");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -116,19 +114,25 @@ public class BasicOpMode_Linear extends LinearOpMode {
             leftPower  = gamepad1.left_stick_y;
             rightPower = pidController.getPID(rightDrive.getCurrentPosition());
             
-            rightDrive.setDirection(rightPower > 0 ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+            //rightDrive.setDirection(rightPower > 0 ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
-            rightDrive.setPower(Math.abs(rightPower));
 
+            rightDrive.setPower(pidController.atSetpoint() ? 0 : rightPower);
 
             telemetry.addData("ARGB", "alpha: (%.3f) red:(%.3f) green:(%.3f) blue:(%.3f)"
             , (float) colorSensor.alpha(), (float) colorSensor.red(), (float) colorSensor.green(), (float) colorSensor.blue());
 
-            telemetry.addData("Encoder", "(%.4f)", (float) rightDrive.getCurrentPosition());
+            telemetry.addData("Encoder", "Right: (%.4f) Left: (%.4f)", (float) rightDrive.getCurrentPosition(), (float) leftDrive.getCurrentPosition());
 
             telemetry.addData("Hall Effect", "Value: " + (touchSensor.getState() ? "Touched" : "Not touched!"));
+
+            telemetry.addData("PID Position Error", pidController.getError());
+
+            telemetry.addData("P", pidController.getP(rightDrive.getCurrentPosition()));
+
+            telemetry.addData("At Setpoint", pidController.atSetpoint());
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
