@@ -38,7 +38,7 @@ public class testing1 extends OpMode
     private ColorSensor colorSensor;
     private Servo servo;
     double rightPower;
-    double tiks, previousTiks;
+    double tiks, previousTiks, counter;
     double servoState;
     boolean firstLimitSwitch;
     final int COLOR = 0;
@@ -68,6 +68,7 @@ public class testing1 extends OpMode
         tiks = 2500;
         previousTiks = 0;
         servoState = 0;
+        counter = 0;
         firstLimitSwitch = limitswitch.getState();
 
 
@@ -95,42 +96,48 @@ public class testing1 extends OpMode
      */
     @Override
     public void loop() {
-        // Setup a variable for each drive wheel to save power level for telemetry
 
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
-
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-
+        if (colorSensor.blue() != COLOR) {
             if (limitswitch.getState() || limitswitch.getState() != firstLimitSwitch) {
-                if (rightDrive.getCurrentPosition() == previousTiks + tiks) {
+             rightPower = 0.2;
+             servoState = 0.2;
+                if (rightDrive.getCurrentPosition() >= previousTiks + tiks) {
                     if (gamepad2.a){
                         reverse  = !reverse;
                     }
-
-                    rightPower = Range.clip(rightPower + 0.2, -1.0, 1.0);
-                    if (reverse){
-                        rightPower = rightPower * -1 ;
+                    if (reverse) {
+                        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+                        counter++;
+                        rightPower = Range.clip(rightPower + 0.2 * counter, -1.0, 1.0);
+                        previousTiks = rightDrive.getCurrentPosition();
+                        servoState = servoState + 0.2;
+                        firstLimitSwitch = limitswitch.getState();
                     }
-                    previousTiks = rightDrive.getCurrentPosition();
-                    servoState = servoState + 0.2;
-                    servo.setPosition(1 * servoState);
-                    firstLimitSwitch = limitswitch.getState();
+                    else {
+                        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+                        counter++;
+                        rightPower = Range.clip(rightPower + 0.2 * counter, -1.0, 1.0);
+                        previousTiks = rightDrive.getCurrentPosition();
+                        servoState = servoState + 0.2;
+                        firstLimitSwitch = limitswitch.getState();
+                    }
                 }
-            }
 
+                servo.setPosition(1 * servoState);
+                rightDrive.setPower(rightPower);
+            }
+        }
         else {
             rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        rightDrive.setPower(rightPower);
 
-        telemetry.addData("Motors", "right (%.2f)", rightPower);
+        telemetry.addData("Motor", "%f", rightPower);
+        telemetry.addData("tiks", "%i",rightDrive.getCurrentPosition());
+        telemetry.addData("servo position", "%f",servo.getPosition());
+        telemetry.addData("color sensor" ,"%i",colorSensor.argb());
+        telemetry.addData("limit switch state", "%b",limitswitch.getState());
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
     @Override
     public void stop() {
     }
