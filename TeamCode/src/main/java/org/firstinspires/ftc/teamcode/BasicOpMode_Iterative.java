@@ -60,6 +60,9 @@ public class BasicOpMode_Iterative extends OpMode
 
     CommandBase command;
 
+    boolean btnPress = false;
+    boolean lastBtnPress = false;
+
     private ExampleSubsystem exampleSubsystem;
 
     /*
@@ -99,9 +102,12 @@ public class BasicOpMode_Iterative extends OpMode
         telemetry.addData("Hardware Map", ExternalHardwareMap.getInstance() == null);
         telemetry.addData("Motor", ExternalHardwareMap.getInstance().exampleMotor == null);
         telemetry.addData("Command Running", command.isRunning());
+        telemetry.addData("Button Pressed", btnPress);
         telemetry.update();
 
-        if (gamepad1.a)
+        btnPress = gamepad1.a;
+
+        if (gamepad1.a && btnPress!= lastBtnPress)
         {
             CommandScheduler.getInstance().schedule(command);
         }
@@ -109,6 +115,11 @@ public class BasicOpMode_Iterative extends OpMode
         {
             CommandScheduler.getInstance().end(command);
         }
+        if(gamepad1.y){
+            CommandScheduler.getInstance().schedule(new exampleCommand(-1));
+        }
+
+        lastBtnPress = btnPress;
     }
 
     /*
