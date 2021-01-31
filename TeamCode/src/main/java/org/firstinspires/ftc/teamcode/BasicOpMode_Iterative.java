@@ -60,8 +60,6 @@ public class BasicOpMode_Iterative extends OpMode
 
     CommandBase command = new exampleCommand(1);
 
-    public static boolean commandRunning = false;
-
     private ExampleSubsystem exampleSubsystem = ExampleSubsystem.getInstance();
 
     /*
@@ -98,7 +96,7 @@ public class BasicOpMode_Iterative extends OpMode
 
         telemetry.addData("Hardware Map", ExternalHardwareMap.getInstance() == null);
         telemetry.addData("Motor", ExternalHardwareMap.getInstance().exampleMotor == null);
-        telemetry.addData("Command Running", commandRunning);
+        telemetry.addData("Command Running", command.isRunning());
         telemetry.update();
 
         if (gamepad1.a)

@@ -59,7 +59,12 @@ public class CommandScheduler {
 
     public void end(CommandBase command){
         command.end(true);
-        requirementsMap.remove(command);
+        requirementsMap.values().remove(command);
+    }
+
+    public bool isRunning(CommandBase command)
+    {
+        return requirementsMap.containsValue(command);
     }
 
     public static CommandScheduler getInstance()
