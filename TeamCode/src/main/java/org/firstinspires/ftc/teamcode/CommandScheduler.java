@@ -22,7 +22,7 @@ public class CommandScheduler {
         {
             if (requirementsMap.containsKey(requiredSubsystem))
             {
-                // TODO interrupt subsystem commands
+                this.end(command);
                 return;
             }
         }
