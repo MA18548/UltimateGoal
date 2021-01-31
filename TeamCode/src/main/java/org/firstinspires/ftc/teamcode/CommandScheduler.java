@@ -62,7 +62,7 @@ public class CommandScheduler {
         requirementsMap.values().remove(command);
     }
 
-    public bool isRunning(CommandBase command)
+    public boolean isRunning(CommandBase command)
     {
         return requirementsMap.containsValue(command);
     }

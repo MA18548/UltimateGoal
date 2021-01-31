@@ -58,9 +58,9 @@ public class BasicOpMode_Iterative extends OpMode
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
 
-    CommandBase command = new exampleCommand(1);
+    CommandBase command;
 
-    private ExampleSubsystem exampleSubsystem = ExampleSubsystem.getInstance();
+    private ExampleSubsystem exampleSubsystem;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -69,6 +69,8 @@ public class BasicOpMode_Iterative extends OpMode
     public void init()
     {
         ExternalHardwareMap.getInstance().init(hardwareMap);
+        exampleSubsystem = ExampleSubsystem.getInstance();
+        command = new exampleCommand(1);
     }
 
     /*

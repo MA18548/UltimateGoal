@@ -20,7 +20,7 @@ public abstract class CommandBase {
         requiredSubsystem = subsystems;
     }
 
-    bool isRunning()
+    boolean isRunning()
     {
         return CommandScheduler.getInstance().isRunning(this);
     }

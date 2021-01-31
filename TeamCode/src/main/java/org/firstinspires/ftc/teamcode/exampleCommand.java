@@ -21,14 +21,14 @@ public class exampleCommand extends CommandBase {
 
     public void execute()
     {
-        //exampleSubsystem.setMotor(this.power);
-        BasicOpMode_Iterative.commandRunning = true;
+        exampleSubsystem.setMotor(this.power);
+        //BasicOpMode_Iterative.commandRunning = true;
 
     }
 
-    public void end()
+    public void end(boolean interrupted)
     {
-        //exampleSubsystem.setMotor(0);
-        BasicOpMode_Iterative.commandRunning = false;
+        exampleSubsystem.setMotor(0);
+        //BasicOpMode_Iterative.commandRunning = false;
     }
 }
