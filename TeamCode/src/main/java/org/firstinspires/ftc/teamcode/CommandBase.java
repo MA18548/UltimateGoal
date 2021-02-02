@@ -10,22 +10,27 @@ public abstract class CommandBase {
     void execute() {}
     void end(boolean interrupted)  {}
 
-    boolean isFinished()
+    public boolean isFinished()
     {
         return false;
     }
 
-    void addRequirements(Subsystem... subsystems)
+    public void addRequirements(Subsystem... subsystems)
     {
         requiredSubsystem = subsystems;
     }
 
-    boolean isRunning()
+    public void schedule()
+    {
+        CommandScheduler.getInstance().schedule(this);
+    }
+
+    public boolean isRunning()
     {
         return CommandScheduler.getInstance().isRunning(this);
     }
 
-    void setAsDefaultCommand()
+    public void setAsDefaultCommand()
     {
         CommandScheduler.getInstance().setDefaultCommand(this);
     }

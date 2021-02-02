@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -11,6 +12,8 @@ public class CommandScheduler {
 
     private HashMap<Subsystem, CommandBase> subsystemMap = new HashMap<Subsystem, CommandBase>();
     private HashMap<Subsystem, CommandBase> requirementsMap = new HashMap<Subsystem, CommandBase>();
+
+    private Collection<Runnable> buttons = new Collection();
 
     private CommandScheduler()
     {
@@ -21,10 +24,6 @@ public class CommandScheduler {
     {
         for (Subsystem subsystem: command.getRequirements())
         {
-            if (!subsystemMap.containsKey(key))
-            {
-                subsystemMap.put(subsystem, null);
-            }
             if (requirementsMap.containsKey(subsystem))
             {
                 this.end(command);
@@ -42,6 +41,11 @@ public class CommandScheduler {
 
     public void run()
     {
+        for (Runnable button : buttons) 
+        {
+            button.run();
+        }
+
         for (Subsystem subsystem : subsystemMap.keySet())
         {
             subsystem.periodic();
@@ -68,6 +72,30 @@ public class CommandScheduler {
         command.end(true);
         requirementsMap.values().remove(command);
     }
+
+    public void addButton(Runnable button)
+    {
+        buttons.add(button);
+    }
+
+    public void clearButtons()
+    {
+        buttons.clear();
+    }
+
+    public void registerSubsystem(Subsystem... subsystems) 
+    {
+        for (Subsystem subsystem : subsystems) 
+        {
+            subsystemMap.put(subsystem, null);
+        }
+    }
+
+    public void unregisterSubsystem(Subsystem... subsystems) 
+    {
+        subsystemMap.keySet().removeAll(Set.of(subsystems));
+    }
+
 
     public void setDefaultCommand(CommandBase command)
     {
