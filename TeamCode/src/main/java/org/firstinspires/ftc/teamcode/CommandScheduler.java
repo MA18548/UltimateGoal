@@ -9,6 +9,7 @@ import java.util.Iterator;
 public class CommandScheduler {
     private static CommandScheduler commandScheduler;
 
+    private HashMap<Subsystem, CommandBase> subsystemMap = new HashMap<Subsystem, CommandBase>();
     private HashMap<Subsystem, CommandBase> requirementsMap = new HashMap<Subsystem, CommandBase>();
 
     private CommandScheduler()
@@ -18,9 +19,13 @@ public class CommandScheduler {
 
     public void schedule(CommandBase command)
     {
-        for (Subsystem requiredSubsystem: command.getRequirements())
+        for (Subsystem subsystem: command.getRequirements())
         {
-            if (requirementsMap.containsKey(requiredSubsystem))
+            if (!subsystemMap.containsKey(key))
+            {
+                subsystemMap.put(subsystem, null);
+            }
+            if (requirementsMap.containsKey(subsystem))
             {
                 this.end(command);
                 return;
@@ -37,29 +42,39 @@ public class CommandScheduler {
 
     public void run()
     {
-        // run periodic functions
-        for (Subsystem subsystem : requirementsMap.keySet())
+        for (Subsystem subsystem : subsystemMap.keySet())
         {
             subsystem.periodic();
-        }
-
-        for (Iterator<CommandBase> iterator = requirementsMap.values().iterator();
-             iterator.hasNext(); ) {
-            CommandBase command = iterator.next();
-
-            command.execute();
-
-            if (command.isFinished())
+            if (requirementsMap.get(subsystem))
             {
-                command.end(false);
-                requirementsMap.keySet().removeAll(new ArrayList<Subsystem>(Arrays.asList(command.getRequirements())));
+                CommandBase command = requirementsMap.get(subsystem);
+                command.execute();
+
+                if (command.isFinished())
+                {
+                    this.end(command);
+                }
+            }
+            else if (subsystemMap.get(subsystem))
+            {
+                CommandBase command = subsystemMap.get(subsystem);
+                command.execute();
             }
         }
     }
 
-    public void end(CommandBase command){
+    public void end(CommandBase command)
+    {
         command.end(true);
         requirementsMap.values().remove(command);
+    }
+
+    public void setDefaultCommand(CommandBase command)
+    {
+        for (Subsystem requiredSubsystem: command.getRequirements())
+        {
+            subsystemMap.replace(requiredSubsystem, command);
+        }
     }
 
     public boolean isRunning(CommandBase command)

@@ -25,5 +25,10 @@ public abstract class CommandBase {
         return CommandScheduler.getInstance().isRunning(this);
     }
 
+    void setAsDefaultCommand()
+    {
+        CommandScheduler.getInstance().setDefaultCommand(this);
+    }
+
     Subsystem[] getRequirements() { return requiredSubsystem; }
 }
