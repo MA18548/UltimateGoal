@@ -31,7 +31,7 @@ public class Trigger
                 boolean pressed = get();
 
                 if (!m_pressedLast && pressed) {
-                    command.schedule(interruptible);
+                    command.schedule();
                 }
 
                 m_pressedLast = pressed;
@@ -53,7 +53,7 @@ public class Trigger
                 boolean pressed = get();
 
                 if (pressed) {
-                    command.schedule(interruptible);
+                    command.schedule();
                 } else if (m_pressedLast) {
                     command.cancel();
                 }
@@ -76,7 +76,7 @@ public class Trigger
                 boolean pressed = get();
 
                 if (!m_pressedLast && pressed) {
-                command.schedule(interruptible);
+                command.schedule();
                 } else if (m_pressedLast && !pressed) {
                 command.cancel();
                 }
@@ -99,7 +99,7 @@ public class Trigger
                     boolean pressed = get();
     
                     if (m_pressedLast && !pressed) {
-                      command.schedule(interruptible);
+                      command.schedule();
                     }
     
                     m_pressedLast = pressed;
@@ -108,7 +108,7 @@ public class Trigger
         return this;
     }
 
-    public Trigger cancelWhenActive(final Command command)
+    public Trigger cancelWhenActive(CommandBase command)
     {
         CommandScheduler.getInstance()
             .addButton(
