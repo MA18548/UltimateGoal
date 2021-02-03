@@ -41,6 +41,11 @@ public class Trigger
         return this;
     }
 
+    public Trigger whenActive(Runnable toRun, Subsystem... requirements)
+    {
+        return whenActive(new InstantCommand(toRun, requirements));
+    }
+
     public Trigger whileActiveContinuous(CommandBase command)
     {
         CommandScheduler.getInstance()
@@ -62,6 +67,11 @@ public class Trigger
                 }
             });
         return this;
+    }
+
+    public Trigger whileActiveContinuous(Runnable toRun, Subsystem... requirements)
+    {
+        return whileActiveContinuous(new InstantCommand(toRun, requirements));
     }
 
     public Trigger whileActiveOnce(CommandBase command)
@@ -87,6 +97,11 @@ public class Trigger
         return this;
     }
 
+    public Trigger whileActiveOnce(Runnable toRun, Subsystem... requirements)
+    {
+        return whileActiveOnce(new InstantCommand(toRun, requirements));
+    }
+
     public Trigger whenInactive(CommandBase command) 
     {
         CommandScheduler.getInstance()
@@ -108,6 +123,11 @@ public class Trigger
         return this;
     }
 
+    public Trigger whenInactive(Runnable toRun, Subsystem... requirements)
+    {
+        return whenInactive(new InstantCommand(toRun, requirements));
+    }
+
     public Trigger cancelWhenActive(CommandBase command)
     {
         CommandScheduler.getInstance()
@@ -127,6 +147,11 @@ public class Trigger
                     }
                 });
         return this;
+    }
+
+    public Trigger cancelWhenActive(Runnable toRun, Subsystem... requirements)
+    {
+        return cancelWhenActive(new InstantCommand(toRun, requirements));
     }
     
     public Trigger and(Trigger trigger) 
