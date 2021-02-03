@@ -9,6 +9,7 @@ public class ExampleSubsystem extends Subsystem {
 
     private ExampleSubsystem()
     {
+        registerSubsystem();
         exampleMotor = ExternalHardwareMap.getInstance().exampleMotor;
     }
 

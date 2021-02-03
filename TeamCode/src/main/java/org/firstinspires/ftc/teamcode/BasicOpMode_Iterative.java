@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.Gamepad_EX;
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -98,28 +99,15 @@ public class BasicOpMode_Iterative extends OpMode
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
+        gamepad = new Gamepad_EX(gamepad);
 
         telemetry.addData("Hardware Map", ExternalHardwareMap.getInstance() == null);
         telemetry.addData("Motor", ExternalHardwareMap.getInstance().exampleMotor == null);
         telemetry.addData("Command Running", command.isRunning());
-        telemetry.addData("Button Pressed", btnPress);
         telemetry.update();
 
-        btnPress = gamepad1.a;
-
-        if (gamepad1.a && btnPress!= lastBtnPress)
-        {
-            CommandScheduler.getInstance().schedule(command);
-        }
-        if (gamepad1.b)
-        {
-            CommandScheduler.getInstance().end(command);
-        }
-        if(gamepad1.y){
-            CommandScheduler.getInstance().schedule(new exampleCommand(-1));
-        }
-
-        lastBtnPress = btnPress;
+        gamepad.A.whenActive(new exampleCommand(1));
+        gamepad.A.whenActive(new exampleCommand(-1));
     }
 
     /*
