@@ -30,6 +30,8 @@ public abstract class CommandBase {
         return CommandScheduler.getInstance().isRunning(this);
     }
 
+    void end() { CommandScheduler.getInstance().end(this); }
+
     public void setAsDefaultCommand()
     {
         CommandScheduler.getInstance().setDefaultCommand(this);

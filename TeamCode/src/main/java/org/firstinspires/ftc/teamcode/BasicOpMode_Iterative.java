@@ -99,15 +99,15 @@ public class BasicOpMode_Iterative extends OpMode
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
-        gamepad = new Gamepad_EX(gamepad);
+        Gamepad_EX gamepadEX = new Gamepad_EX(gamepad1);
 
         telemetry.addData("Hardware Map", ExternalHardwareMap.getInstance() == null);
         telemetry.addData("Motor", ExternalHardwareMap.getInstance().exampleMotor == null);
         telemetry.addData("Command Running", command.isRunning());
         telemetry.update();
 
-        gamepad.A.whenActive(new exampleCommand(1));
-        gamepad.A.whenActive(new exampleCommand(-1));
+//        gamepadEX.A.whenActive(new exampleCommand(1));
+//        gamepadEX.A.whenActive(new exampleCommand(-1));
     }
 
     /*

@@ -28,7 +28,7 @@ public class Gamepad_EX
     public Trigger LEFT_STICK;
     public Trigger RIGHT_STICK;
 
-    public Joystick_EX(Gamepad gamepad)
+    public Gamepad_EX(Gamepad gamepad)
     {
         this.gamepad = gamepad;
 

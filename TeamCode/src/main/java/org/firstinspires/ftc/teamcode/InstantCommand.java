@@ -13,17 +13,15 @@ public class InstantCommand extends CommandBase {
 
   public InstantCommand() 
   {
-    m_toRun = () -> {};
+    toRun = () -> {};
   }
 
-  @Override
-  public void initialize() 
+  public void initialize()
   {
     toRun.run();
   }
 
-  @Override
-  public boolean isFinished() 
+  public boolean isFinished()
   {
     return true;
   }

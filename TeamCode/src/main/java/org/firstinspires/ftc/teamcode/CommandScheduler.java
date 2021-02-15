@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 public class CommandScheduler {
     private static CommandScheduler commandScheduler;
@@ -13,7 +14,7 @@ public class CommandScheduler {
     private HashMap<Subsystem, CommandBase> subsystemMap = new HashMap<Subsystem, CommandBase>();
     private HashMap<Subsystem, CommandBase> requirementsMap = new HashMap<Subsystem, CommandBase>();
 
-    private Collection<Runnable> buttons = new Collection();
+    private ArrayList<Runnable> buttons = new ArrayList<Runnable>();
 
     private CommandScheduler()
     {
@@ -49,7 +50,7 @@ public class CommandScheduler {
         for (Subsystem subsystem : subsystemMap.keySet())
         {
             subsystem.periodic();
-            if (requirementsMap.get(subsystem))
+            if (requirementsMap.containsKey(subsystem))
             {
                 CommandBase command = requirementsMap.get(subsystem);
                 command.execute();
@@ -59,10 +60,11 @@ public class CommandScheduler {
                     this.end(command);
                 }
             }
-            else if (subsystemMap.get(subsystem))
-            {
+            else if (subsystemMap.containsKey(subsystem)) {
                 CommandBase command = subsystemMap.get(subsystem);
-                command.execute();
+                if (command != null) {
+                    command.execute();
+                }
             }
         }
     }
@@ -93,7 +95,7 @@ public class CommandScheduler {
 
     public void unregisterSubsystem(Subsystem... subsystems) 
     {
-        subsystemMap.keySet().removeAll(Set.of(subsystems));
+        subsystemMap.values().removeAll(Arrays.asList(subsystems));
     }
 
 

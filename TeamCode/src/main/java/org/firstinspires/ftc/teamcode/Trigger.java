@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import java.util.function.BooleanSupplier;
 
-import jdk.jfr.internal.cmd.Command;
-
 public class Trigger 
 {
-
     private BooleanSupplier isActive;
 
     public Trigger(BooleanSupplier isActive)
@@ -60,7 +57,7 @@ public class Trigger
                 if (pressed) {
                     command.schedule();
                 } else if (m_pressedLast) {
-                    command.cancel();
+                    command.end();
                 }
 
                 m_pressedLast = pressed;
@@ -88,7 +85,7 @@ public class Trigger
                 if (!m_pressedLast && pressed) {
                 command.schedule();
                 } else if (m_pressedLast && !pressed) {
-                command.cancel();
+                command.end();
                 }
 
                 m_pressedLast = pressed;
@@ -140,7 +137,7 @@ public class Trigger
                     boolean pressed = get();
 
                     if (!m_pressedLast && pressed) {
-                        command.cancel();
+                        command.end();
                     }
 
                     m_pressedLast = pressed;
