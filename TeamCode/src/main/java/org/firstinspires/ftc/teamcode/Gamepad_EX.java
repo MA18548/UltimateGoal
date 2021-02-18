@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import java.util.function.BooleanSupplier;
-
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 

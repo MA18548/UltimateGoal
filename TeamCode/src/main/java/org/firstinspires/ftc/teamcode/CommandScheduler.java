@@ -11,8 +11,8 @@ import java.util.Set;
 public class CommandScheduler {
     private static CommandScheduler commandScheduler;
 
-    private HashMap<Subsystem, CommandBase> subsystemMap = new HashMap<Subsystem, CommandBase>();
-    private HashMap<Subsystem, CommandBase> requirementsMap = new HashMap<Subsystem, CommandBase>();
+    public HashMap<Subsystem, CommandBase> subsystemMap = new HashMap<Subsystem, CommandBase>();
+    public HashMap<Subsystem, CommandBase> requirementsMap = new HashMap<Subsystem, CommandBase>();
 
     private ArrayList<Runnable> buttons = new ArrayList<Runnable>();
 
@@ -27,7 +27,7 @@ public class CommandScheduler {
         {
             if (requirementsMap.containsKey(subsystem))
             {
-                this.end(command);
+                this.end(requirementsMap.get(subsystem));
                 return;
             }
         }

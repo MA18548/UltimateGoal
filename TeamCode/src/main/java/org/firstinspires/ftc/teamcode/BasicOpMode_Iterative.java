@@ -56,6 +56,7 @@ public class BasicOpMode_Iterative extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    private Gamepad_EX gamepad_ex;
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
 
@@ -75,6 +76,8 @@ public class BasicOpMode_Iterative extends OpMode
         ExternalHardwareMap.getInstance().init(hardwareMap);
         exampleSubsystem = ExampleSubsystem.getInstance();
         command = new exampleCommand(1);
+
+//        gamepad_ex = new Gamepad_EX(gamepad1);
     }
 
     /*
@@ -99,15 +102,35 @@ public class BasicOpMode_Iterative extends OpMode
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
-        Gamepad_EX gamepadEX = new Gamepad_EX(gamepad1);
 
-        telemetry.addData("Hardware Map", ExternalHardwareMap.getInstance() == null);
-        telemetry.addData("Motor", ExternalHardwareMap.getInstance().exampleMotor == null);
-        telemetry.addData("Command Running", command.isRunning());
+        telemetry.addData("Subsystems", CommandScheduler.getInstance().subsystemMap);
+        telemetry.addData("Requirements", CommandScheduler.getInstance().requirementsMap);
         telemetry.update();
 
-//        gamepadEX.A.whenActive(new exampleCommand(1));
-//        gamepadEX.A.whenActive(new exampleCommand(-1));
+        if (!btnPress && gamepad1.a)
+        {
+            CommandScheduler.getInstance().schedule(new exampleCommand(1));
+            btnPress = true;
+        }
+
+        if (gamepad1.y)
+        {
+            btnPress = true;
+        }
+
+        if (gamepad1.x)
+        {
+            btnPress = false;
+        }
+
+        if (btnPress && gamepad1.b)
+        {
+            CommandScheduler.getInstance().schedule(new exampleCommand(-1));
+            btnPress=false;
+        }
+//
+//        gamepad_ex.A.whenActive(new exampleCommand(1));
+//        gamepad_ex.B.whenActive(new exampleCommand(-1));
     }
 
     /*
