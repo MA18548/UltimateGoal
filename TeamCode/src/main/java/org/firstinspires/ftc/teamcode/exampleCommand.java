@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import org.ma.ftc.lib.command.CommandBase;
 
 public class exampleCommand extends CommandBase {
 
-    private ExampleSubsystem exampleSubsystem;
-    private double power;
+    private final ExampleSubsystem exampleSubsystem;
+    private final double power;
 
     public exampleCommand(double power)
     {
@@ -22,13 +23,10 @@ public class exampleCommand extends CommandBase {
     public void execute()
     {
         exampleSubsystem.setMotor(this.power);
-        //BasicOpMode_Iterative.commandRunning = true;
-
     }
 
-    public void end(boolean interrupted)
+    public void end()
     {
         exampleSubsystem.setMotor(0);
-        //BasicOpMode_Iterative.commandRunning = false;
     }
 }
