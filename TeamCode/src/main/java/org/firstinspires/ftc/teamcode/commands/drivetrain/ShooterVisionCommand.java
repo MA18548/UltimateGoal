@@ -27,8 +27,8 @@ public class ShooterVisionCommand extends CommandBase {
 
     @Override
     public void execute() {
-        mecanumDriveSubsystem.arcadeDrive(-mecanumDriveSubsystem.getAnglePID(CameraSubsystem.getInstance().vuforiaGetAngleRedTowerGoal() * 0.8),
-                mecanumDriveSubsystem.getDistancePID(mecanumDriveSubsystem.getAverageDistance()) * 0.5);
+        mecanumDriveSubsystem.arcadeDrive(-mecanumDriveSubsystem.getAnglePID(CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()),
+                mecanumDriveSubsystem.getDistancePID(mecanumDriveSubsystem.getAverageDistance()) * 0);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class ShooterVisionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(0 - CameraSubsystem.getInstance().vuforiaGetAngleRedTowerGoal()) <= 1.4;
+        return Math.abs(0 - CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()) <= 1.4;
     }
 }

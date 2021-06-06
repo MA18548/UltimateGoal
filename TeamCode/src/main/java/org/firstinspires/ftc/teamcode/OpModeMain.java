@@ -90,8 +90,8 @@ public class OpModeMain extends OpMode {
 
         MecanumDriveSubsystem.getInstance().reset();
 
-        systemGamepad.X.whileActiveContinuous(new IntakeMotorCommand(1));
-        systemGamepad.B.whileActiveContinuous(new IntakeMotorCommand(-1));
+        systemGamepad.X.whileActiveOnce(new IntakeMotorCommand(0.6));
+        systemGamepad.B.whileActiveOnce(new IntakeMotorCommand(-0.6));
         systemGamepad.A.whileActiveOnce(new ShooterPIDCommand(-2600));
         systemGamepad.DPAD_RIGHT.whileActiveContinuous(new RingStackCommand());
 
@@ -116,6 +116,20 @@ public class OpModeMain extends OpMode {
                 } else {
                     wobbleSubsystem.openClaw();
                 }
+            }
+        });
+
+        systemGamepad.RIGHT_BUMPER.whenActive(new Runnable() {
+            @Override
+            public void run() {
+                ShooterSubsystem.getInstance().SETPOINT += 25;
+            }
+        });
+
+        systemGamepad.LEFT_BUMPER.whenActive(new Runnable() {
+            @Override
+            public void run() {
+                ShooterSubsystem.getInstance().SETPOINT -= 25;
             }
         });
 

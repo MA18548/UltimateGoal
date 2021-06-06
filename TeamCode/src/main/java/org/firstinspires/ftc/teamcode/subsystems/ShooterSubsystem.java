@@ -28,6 +28,8 @@ public class ShooterSubsystem extends SubsystemBase {
     private final double MIN_SERVO_POS = 0; // TODO
     private boolean servoReset;
 
+    public int SETPOINT = -1990;
+
     private ShooterSubsystem() {
         registerSubsystem();
 
@@ -49,6 +51,11 @@ public class ShooterSubsystem extends SubsystemBase {
     {
         velocityPID.setKf((1/6000d) * setpoint);
         velocityPID.setSetpoint(setpoint);
+    }
+
+    public double getRPMByDistance(double distance)
+    {
+        return distance > 2650 ? -2095 : -1 * (0.0015 * (Math.pow(distance, 2)) - 6.5231 * distance + 9423.4);
     }
 
     public void setMotor(double power) {
@@ -143,7 +150,7 @@ public class ShooterSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         telemetry.addData("Shooter KF: ", velocityPID.getKf());
-        telemetry.addData("Servo Pos: ", flyWheel.getPower());
+        telemetry.addData("Shooter Setpoint: ", SETPOINT);
 
     }
 }

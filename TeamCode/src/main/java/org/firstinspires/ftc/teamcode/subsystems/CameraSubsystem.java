@@ -207,6 +207,23 @@ public class CameraSubsystem extends SubsystemBase {
         return 0;
     }
 
+    public double vuforiaGetDistanceTowerGoal()
+    {
+        double redTowerGoal = vuforiaGetDistanceRedTowerGoal();
+        double blueTowerGoal = vuforiaGetDistanceBlueTowerGoal();
+        double out = 0;
+        if (redTowerGoal != 0)
+        {
+            out = redTowerGoal;
+        }
+        else if (blueTowerGoal != 0)
+        {
+            out = blueTowerGoal;
+        }
+        return out;
+    }
+
+
     public double vuforiaGetDistanceRedTowerGoal()
     {
         return vuforiaGetDistanceFromName("Red Tower Goal Target");
@@ -226,6 +243,22 @@ public class CameraSubsystem extends SubsystemBase {
             return Math.toDegrees(Math.atan2(translation.get(0), translation.get(2)));
         }
         return 0;
+    }
+
+    public double vuforiaGetAngleTowerGoal()
+    {
+        double redTowerGoal = vuforiaGetAngleRedTowerGoal();
+        double blueTowerGoal = vuforiaGetAngleBlueTowerGoal();
+        double out = 0;
+        if (redTowerGoal != 0)
+        {
+            out = redTowerGoal;
+        }
+        else if (blueTowerGoal != 0)
+        {
+            out = blueTowerGoal;
+        }
+        return out;
     }
 
     public double vuforiaGetAngleRedTowerGoal()
@@ -260,8 +293,8 @@ public class CameraSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        telemetry.addData("Red Tower Goal Angle: ", vuforiaGetAngleRedTowerGoal());
-        telemetry.addData("Red Tower Goal Distance: ", vuforiaGetDistanceRedTowerGoal());
+        telemetry.addData("Tower Goal Angle: ", vuforiaGetAngleTowerGoal());
+        telemetry.addData("Tower Goal Distance: ", vuforiaGetDistanceTowerGoal());
 
     }
 }

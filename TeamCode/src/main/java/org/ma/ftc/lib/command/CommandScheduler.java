@@ -5,6 +5,7 @@ import org.ma.ftc.lib.Runnable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * The scheduler responsible for running {@link CommandBase}s. A Command-based robot should call {@link
@@ -208,7 +209,10 @@ public class CommandScheduler {
      */
     public void registerSubsystem(SubsystemBase... subsystems) {
         for (SubsystemBase subsystem : subsystems) {
-            subsystemMap.put(subsystem, null);
+            if (!subsystemMap.containsKey(subsystem))
+            {
+                subsystemMap.put(subsystem, null);
+            }
         }
     }
 
@@ -259,8 +263,7 @@ public class CommandScheduler {
      */
 
     public boolean isScheduled(CommandBase... commands) {
-//        return requirementsMap.keySet().containsAll(Set.of(commands));
-        return true;
+        return requirementsMap.keySet().containsAll(Arrays.asList(commands));
     }
 
 

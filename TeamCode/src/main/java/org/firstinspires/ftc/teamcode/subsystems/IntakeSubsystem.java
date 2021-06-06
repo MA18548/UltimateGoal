@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.ma.ftc.lib.command.RobotMap;
@@ -10,18 +11,23 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private static IntakeSubsystem exampleSubsystem;
 
-    private final DcMotor MainMotor;
+    private final DcMotorEx MainMotor;
 //    private final VoltageSensor voltageSensor;
 
     private IntakeSubsystem() {
         registerSubsystem();
 
-        MainMotor = RobotMap.getInstance().getMap().get(DcMotor.class, "intake_motor");
+        MainMotor = RobotMap.getInstance().getMap().get(DcMotorEx.class, "intake_motor");
 //        voltageSensor = (VoltageSensor) MainMotor;
     }
 
     public void setMotor(double power) {
         MainMotor.setPower(power);
+    }
+
+    public double getSpeed()
+    {
+        return MainMotor.getVelocity();
     }
 
 //    public double getVoltage()
