@@ -32,7 +32,7 @@ public class MAPath extends CommandBase {
 
     private boolean isFinished;
 
-    private CommandBase shooting;
+    private Movement[][] paths = {Path.testPath, Path.testPath2};
 
     public MAPath(double waitTime) {
         this.waitTime = waitTime;
@@ -55,7 +55,7 @@ public class MAPath extends CommandBase {
 //    chassis.rampRate(RobotConstants.Ramp_Rate_Auto);
 //    chassis.setidilmodeBrake(false);
 
-        Path.mainPath = Path.testPath;
+        Path.mainPath = Path.testPath2;
         stage = 0;
         isFinished = false;
         chassis.reset();
@@ -84,7 +84,7 @@ public class MAPath extends CommandBase {
         chassis.runMovement();
 
         //&& chassis.isAngleDone()
-        if (chassis.isDistanceDone() && timer.seconds() - lastTimeOnTarget >= Path.mainPath[stage].getWaitTime())
+        if (chassis.isDistanceDone() && chassis.isAngleDone() && timer.seconds() - lastTimeOnTarget >= Path.mainPath[stage].getWaitTime())
         {
             if (stage < Path.mainPath.length - 1) {
                 stage++;
@@ -102,13 +102,11 @@ public class MAPath extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            chassis.stop();
-//      chassis.setidilmodeBrake(true);
+            //      chassis.setidilmodeBrake(true);
         } else {
             pathnum++;
-            chassis.stop();
-//      chassis.setidilmodeBrake(true);
         }
+        chassis.stop();
     }
 
     // Returns true when the command should end.

@@ -22,7 +22,6 @@ public class ShooterPIDCommand extends CommandBase {
         shooterSubsystem = ShooterSubsystem.getInstance();
         timer = RobotMap.getInstance().getRuntime();
         rpmSetpoint = setpoint;
-        shootTime = timer.seconds();
         isReset = true;
         addRequirements(shooterSubsystem);
     }
@@ -30,9 +29,11 @@ public class ShooterPIDCommand extends CommandBase {
 
     public void initialize() {
         double distance = CameraSubsystem.getInstance().vuforiaGetDistanceTowerGoal();
+        shootTime = timer.seconds();
         shooterSubsystem.setSetpoint(shooterSubsystem.SETPOINT);
-        if (distance != 0)
+        if (shooterSubsystem.VISION)
         {
+            distance = distance == 0 ? 5000 : distance;
             shooterSubsystem.setSetpoint(shooterSubsystem.getRPMByDistance(distance));
         }
         RobotMap.getInstance().getTelemtry().addData("I'm in init", "");
@@ -75,6 +76,7 @@ public class ShooterPIDCommand extends CommandBase {
 
     public boolean isFinished()
     {
+
         return false;
     }
 }

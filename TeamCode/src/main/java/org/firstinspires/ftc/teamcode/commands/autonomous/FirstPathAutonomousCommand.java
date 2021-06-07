@@ -19,13 +19,16 @@ public class FirstPathAutonomousCommand extends CommandBase {
     private CommandBase shootingCommand;
     private CommandBase shooterVisionCommand;
     private final ElapsedTime timer;
+    private double time;
+    private boolean isFinished;
 
     public FirstPathAutonomousCommand() {
         MAPath = new MAPath(0.2);
         shootingCommand = new ShooterPIDCommand(-2200);
         shooterVisionCommand = new ShooterVisionCommand();
         timer = RobotMap.getInstance().getRuntime();
-
+        time = timer.seconds();
+        isFinished = false;
 
         addRequirements(MecanumDriveSubsystem.getInstance(), ShooterSubsystem.getInstance(), CameraSubsystem.getInstance());
     }
@@ -33,6 +36,7 @@ public class FirstPathAutonomousCommand extends CommandBase {
     @Override
     public void initialize() {
         stage = 0;
+        ShooterSubsystem.getInstance().VISION = true;
         MAPath.initialize();
         RobotMap.getInstance().getTelemtry().addData("I'm in init!", "");
 
@@ -40,12 +44,13 @@ public class FirstPathAutonomousCommand extends CommandBase {
 
     @Override
     public void execute() {
-        RobotMap.getInstance().getTelemtry().addData("I'm in execute!", "");
-        switch (stage)
-        {
+        RobotMap.getInstance().getTelemtry().addData("I'm in autonomous!", "");
+        RobotMap.getInstance().getTelemtry().addData("Autonomous stage: ", stage);
+
+        switch (stage) {
             case 0:
                 MAPath.execute();
-                if(MAPath.isFinished()){
+                if (MAPath.isFinished()) {
                     MAPath.end(true);
                     shooterVisionCommand.initialize();
                     stage++;
@@ -58,18 +63,30 @@ public class FirstPathAutonomousCommand extends CommandBase {
                     shooterVisionCommand.end(true);
                     shootingCommand.initialize();
                     stage++;
+                    time = timer.seconds();
                 }
                 break;
 
             case 2:
                 shootingCommand.execute();
-                if(shootingCommand.isFinished()){
+                if(timer.seconds() - time >= 3){
                     shootingCommand.end(true);
+                    time = timer.seconds();
+                    stage++;
+
                 }
                 break;
+            case 3:
+                MecanumDriveSubsystem.getInstance().arcadeDrive(0, 0.65);
+                if(timer.seconds() - time >= 0.77){
+                    MecanumDriveSubsystem.getInstance().stop();
+                    stage++;
+                    isFinished = true;
 
+                }
+                break;
         }
-    }
+        }
 
     @Override
     public void end(boolean interrupted) {
@@ -78,6 +95,6 @@ public class FirstPathAutonomousCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return isFinished;
     }
 }

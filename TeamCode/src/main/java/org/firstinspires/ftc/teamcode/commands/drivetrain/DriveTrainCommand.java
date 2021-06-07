@@ -34,6 +34,7 @@ public class DriveTrainCommand extends CommandBase {
         rot_modifier = gamepad.gamepad.right_bumper ? .5 : rot_modifier*1;
 
         RobotMap.getInstance().getTelemtry().addData("distance:", mecanumDriveSubsystem.getAverageDistance());
+        RobotMap.getInstance().getTelemtry().addData("navx:", mecanumDriveSubsystem.getAngle());
 
         mecanumDriveSubsystem.driveCartesian(gamepad.getLeftY() * modifier, -gamepad.getLeftX() * modifier,
                                              gamepad.getRightX() * rot_modifier);

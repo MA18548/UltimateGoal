@@ -29,6 +29,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private boolean servoReset;
 
     public int SETPOINT = -1990;
+    public boolean VISION = true;
 
     private ShooterSubsystem() {
         registerSubsystem();
@@ -55,7 +56,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getRPMByDistance(double distance)
     {
-        return distance > 2650 ? -2095 : -1 * (0.0015 * (Math.pow(distance, 2)) - 6.5231 * distance + 9423.4);
+        return distance > 2650 ? -2095 : -1 * (0.0015 * (Math.pow(distance, 2)) - 6.5231 * distance + 9180.4);
     }
 
     public void setMotor(double power) {

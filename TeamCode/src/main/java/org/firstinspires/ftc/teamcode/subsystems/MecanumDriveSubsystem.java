@@ -72,9 +72,9 @@ public class MecanumDriveSubsystem extends SubsystemBase {
         mecanumDrive = new MecanumDrive(leftFrontMotor, leftBackMotor,
                                         rightFrontMotor, rightBackMotor);
 
-        anglePID = new PIDController(0, 3, 2.5e-2, 0, 0, 0.001);
+        anglePID = new PIDController(0, 3, 3.1e-2, 0, 3e-5, 0.001);
         robotAnglePID = new PIDController(0, 3, 1.8e-2, 0, 5e-3, 0);
-        distancePID = new PIDController(0, 60, 4e-1, 0, 5e-2, 0.001);
+        distancePID = new PIDController(0, 60, 1e-2, 0, 2e-5, 0.001);
 
         navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = navxMicro;

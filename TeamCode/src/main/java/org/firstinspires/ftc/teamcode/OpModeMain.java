@@ -123,6 +123,14 @@ public class OpModeMain extends OpMode {
             @Override
             public void run() {
                 ShooterSubsystem.getInstance().SETPOINT += 25;
+                ShooterSubsystem.getInstance().setSetpoint(ShooterSubsystem.getInstance().SETPOINT);
+            }
+        });
+
+        systemGamepad.DPAD_LEFT.whenActive(new Runnable() {
+            @Override
+            public void run() {
+                ShooterSubsystem.getInstance().VISION = !ShooterSubsystem.getInstance().VISION;
             }
         });
 
@@ -130,16 +138,18 @@ public class OpModeMain extends OpMode {
             @Override
             public void run() {
                 ShooterSubsystem.getInstance().SETPOINT -= 25;
+                ShooterSubsystem.getInstance().setSetpoint(ShooterSubsystem.getInstance().SETPOINT);
             }
         });
 
-        driveGamepad.DPAD_DOWN.whileActiveOnce(new MAPath(0.1));
+        driveGamepad.DPAD_DOWN.whileActiveOnce(new MAPath(0.7));
         driveGamepad.Y.whileActiveOnce(new FirstPathAutonomousCommand());
         driveGamepad.A.whileActiveOnce(new ShooterVisionCommand());
 
 
         CameraSubsystem.getInstance();
 
+//        CommandScheduler.getInstance().schedule(new FirstPathAutonomousCommand());
 
         CommandScheduler.getInstance().setDefaultCommand(new DriveTrainCommand());
         CommandScheduler.getInstance().setDefaultCommand(new WobbleMotorCommand());
