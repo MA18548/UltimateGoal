@@ -74,7 +74,7 @@ public class MecanumDriveSubsystem extends SubsystemBase {
                                         rightFrontMotor, rightBackMotor);
 
         anglePID = new PIDController(0, 3, 3.1e-2, 0, 3e-5, 0.001);
-        angleVisionPID = new PIDController(0, 3, 3.125e-2, 1e-8, 3e-5, 0.001);
+        angleVisionPID = new PIDController(0, 3, 3.125e-2, 1e-10, 3e-5, 0.001);
         robotAnglePID = new PIDController(0, 3, 1.8e-2, 0, 5e-3, 0);
         distancePID = new PIDController(0, 60, 1e-2, 0, 2e-5, 0.001);
 
