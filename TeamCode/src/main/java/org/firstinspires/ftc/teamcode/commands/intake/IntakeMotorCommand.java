@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.commands.intake;
 
-import org.firstinspires.ftc.teamcode.ExampleSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.ma.ftc.lib.command.CommandBase;
 import org.ma.ftc.lib.command.RobotMap;
