@@ -12,8 +12,9 @@ import org.ma.ftc.lib.command.CommandBase;
 import org.ma.ftc.lib.command.CommandScheduler;
 import org.ma.ftc.lib.command.RobotMap;
 import org.ma.ftc.lib.control.MAPath;
+import org.ma.ftc.lib.control.Path;
 
-public class FirstPathAutonomousCommand extends CommandBase {
+public class StraightPathAutonomousCommand extends CommandBase {
     private int stage;
     private MAPath MAPath;
     private CommandBase shootingCommand;
@@ -22,15 +23,15 @@ public class FirstPathAutonomousCommand extends CommandBase {
     private double time;
     private boolean isFinished;
 
-    public FirstPathAutonomousCommand() {
+    public StraightPathAutonomousCommand() {
         MAPath = new MAPath(0.2);
         shootingCommand = new ShooterPIDCommand(-2200);
         shooterVisionCommand = new ShooterVisionCommand();
         timer = RobotMap.getInstance().getRuntime();
         time = timer.seconds();
         isFinished = false;
-
-        addRequirements(MecanumDriveSubsystem.getInstance(), ShooterSubsystem.getInstance(), CameraSubsystem.getInstance());
+        Path.mainPath = Path.moveStraight;
+        addRequirements(MecanumDriveSubsystem.getInstance(), ShooterSubsystem.getInstance());
     }
 
     @Override
@@ -69,7 +70,7 @@ public class FirstPathAutonomousCommand extends CommandBase {
 
             case 2:
                 shootingCommand.execute();
-                if(timer.seconds() - time >= 3){
+                if(timer.seconds() - time >= 3.5){
                     shootingCommand.end(true);
                     time = timer.seconds();
                     stage++;

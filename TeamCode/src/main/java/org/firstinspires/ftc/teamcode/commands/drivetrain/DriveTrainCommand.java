@@ -27,11 +27,11 @@ public class DriveTrainCommand extends CommandBase {
     }
 
     public void execute() {
-        double modifier = gamepad.gamepad.left_trigger > 0.5 ? 3 : 1;
-        double rot_modifier = gamepad.gamepad.right_trigger > 0.5 ? 3 : 1;
+        double modifier = gamepad.gamepad.left_bumper ? 3 : 1;
+        double rot_modifier = gamepad.gamepad.right_bumper ? 3 : 1;
 
-        modifier = gamepad.gamepad.left_bumper ? .5 : modifier*1;
-        rot_modifier = gamepad.gamepad.right_bumper ? .5 : rot_modifier*1;
+        modifier = gamepad.gamepad.left_trigger > .5 ? .5 : modifier;
+        rot_modifier = gamepad.gamepad.right_trigger > .5 ? .5 : rot_modifier;
 
         RobotMap.getInstance().getTelemtry().addData("distance:", mecanumDriveSubsystem.getAverageDistance());
         RobotMap.getInstance().getTelemtry().addData("navx:", mecanumDriveSubsystem.getAngle());

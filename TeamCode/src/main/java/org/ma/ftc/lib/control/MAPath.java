@@ -39,6 +39,7 @@ public class MAPath extends CommandBase {
         chassis = MecanumDriveSubsystem.getInstance();
         timer = RobotMap.getInstance().getRuntime();
         addRequirements(chassis);
+        Path.mainPath = Path.testPath;
     }
 
     @Override
@@ -55,7 +56,6 @@ public class MAPath extends CommandBase {
 //    chassis.rampRate(RobotConstants.Ramp_Rate_Auto);
 //    chassis.setidilmodeBrake(false);
 
-        Path.mainPath = Path.testPath2;
         stage = 0;
         isFinished = false;
         chassis.reset();

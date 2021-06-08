@@ -20,15 +20,15 @@ public class ShooterVisionCommand extends CommandBase {
     @Override
     public void initialize() {
         mecanumDriveSubsystem.reset();
-        mecanumDriveSubsystem.setAngleSetpoint(mecanumDriveSubsystem.getAverageDistance());
+        mecanumDriveSubsystem.setAngleSetpoint(0);
 
         // driveTrainSubsystem.setDistanceSetpoint(setpoint);
     }
 
     @Override
     public void execute() {
-        mecanumDriveSubsystem.arcadeDrive(-mecanumDriveSubsystem.getAnglePID(CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()),
-                mecanumDriveSubsystem.getDistancePID(mecanumDriveSubsystem.getAverageDistance()) * 0);
+        mecanumDriveSubsystem.arcadeDrive(-1.31*mecanumDriveSubsystem.getAnglePID(CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()),
+                0);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class ShooterVisionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(0 - CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()) <= 1.4;
+        return Math.abs(CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()) <= 1.6;
     }
 }

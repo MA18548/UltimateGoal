@@ -1,6 +1,8 @@
                                                                                                                                                                                                                                                                 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.SwitchableCamera;
@@ -26,8 +28,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XZY;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
-public class CameraSubsystem extends SubsystemBase {
-    private static CameraSubsystem cameraSubsystem;
+public class CameraSubsystem {
+    public static CameraSubsystem cameraSubsystem;
 
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
@@ -38,11 +40,10 @@ public class CameraSubsystem extends SubsystemBase {
     private VuforiaLocalizer vuforiaLocalizer;
     private TFObjectDetector TFObjectDetector;
 
-    private WebcamName intakeWebcam, shooterWebcam;
-    private SwitchableCamera switchableCamera;
+    private WebcamName shooterWebcam;
 
-    private List<VuforiaTrackable> allTrackables;
-
+    private final List<VuforiaTrackable> allTrackables;
+    public VuforiaTrackables targetsUltimateGoal;
     private static final float mmPerInch        = 25.4f;
     private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
 
@@ -52,28 +53,35 @@ public class CameraSubsystem extends SubsystemBase {
 
     private CameraSubsystem()
     {
-        intakeWebcam = RobotMap.getInstance().getMap().get(WebcamName.class, "intake_webcam");
         shooterWebcam = RobotMap.getInstance().getMap().get(WebcamName.class, "shooter_webcam");
 
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         * We can pass Vuforia the handle to a camera preview resource (on the RC screen);
+         * If no camera monitor is desired, use the parameter-less constructor instead (commented out below).
+         * Note: A preview window is required if you want to view the camera stream on the Driver Station Phone.
+         */
+        int cameraMonitorViewId = RobotMap.getInstance().getMap().appContext.getResources().getIdentifier("cameraMonitorViewId", "id", RobotMap.getInstance().getMap().appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "shooter_webcam");
-                //ClassFactory.getInstance().getCameraManager()
-                                      //      .nameForSwitchableCamera(intakeWebcam, shooterWebcam);
 
+        /**
+         * We also indicate which camera on the RC we wish to use.
+         */
+        parameters.cameraName = shooterWebcam;
+
+        // Make sure extended tracking is disabled for this example.
+        parameters.useExtendedTracking = false;
+
+        //  Instantiate the Vuforia engine
         vuforiaLocalizer = ClassFactory.getInstance().createVuforia(parameters);
-        //switchableCamera.setActiveCamera(shooterWebcam);
-
-        int tfodMonitorViewId = RobotMap.getInstance().getMap().appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", RobotMap.getInstance().getMap().appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
-        TFObjectDetector = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforiaLocalizer);
-        TFObjectDetector.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
 
         // Load the data sets for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
-        VuforiaTrackables targetsUltimateGoal = vuforiaLocalizer.loadTrackablesFromAsset("UltimateGoal");
+        targetsUltimateGoal = this.vuforiaLocalizer.loadTrackablesFromAsset("UltimateGoal");
         VuforiaTrackable blueTowerGoalTarget = targetsUltimateGoal.get(0);
         blueTowerGoalTarget.setName("Blue Tower Goal Target");
         VuforiaTrackable redTowerGoalTarget = targetsUltimateGoal.get(1);
@@ -127,23 +135,24 @@ public class CameraSubsystem extends SubsystemBase {
                 .translation(halfField, -quadField, mmTargetHeight)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90)));
 
-//         Create a transformation matrix describing where the phone is on the robot.
-//
-//         Info:  The coordinate frame for the robot looks the same as the field.
-//         The robot's "forward" direction is facing out along X axis, with the LEFT side facing out along the Y axis.
-//         Z is UP on the robot.  This equates to a bearing angle of Zero degrees.
-//
-//         For a WebCam, the default starting orientation of the camera is looking UP (pointing in the Z direction),
-//         with the wide (horizontal) axis of the camera aligned with the X axis, and
-//         the Narrow (vertical) axis of the camera aligned with the Y axis
-//
-//         But, this example assumes that the camera is actually facing forward out the front of the robot.
-//         So, the "default" camera position requires two rotations to get it oriented correctly.
-//         1) First it must be rotated +90 degrees around the X axis to get it horizontal (it's now facing out the right side of the robot)
-//         2) Next it must be be rotated +90 degrees (counter-clockwise) around the Z axis to face forward.
-//
-//         Finally the camera can be translated to its actual mounting position on the robot.
-//              In this example, it is centered (left to right), but 4" forward of the middle of the robot, and 8" above ground level.
+        //
+        // Create a transformation matrix describing where the phone is on the robot.
+        //
+        // Info:  The coordinate frame for the robot looks the same as the field.
+        // The robot's "forward" direction is facing out along X axis, with the LEFT side facing out along the Y axis.
+        // Z is UP on the robot.  This equates to a bearing angle of Zero degrees.
+        //
+        // For a WebCam, the default starting orientation of the camera is looking UP (pointing in the Z direction),
+        // with the wide (horizontal) axis of the camera aligned with the X axis, and
+        // the Narrow (vertical) axis of the camera aligned with the Y axis
+        //
+        // But, this example assumes that the camera is actually facing forward out the front of the robot.
+        // So, the "default" camera position requires two rotations to get it oriented correctly.
+        // 1) First it must be rotated +90 degrees around the X axis to get it horizontal (it's now facing out the right side of the robot)
+        // 2) Next it must be be rotated +90 degrees (counter-clockwise) around the Z axis to face forward.
+        //
+        // Finally the camera can be translated to its actual mounting position on the robot.
+        //      In this example, it is centered (left to right), but 4" forward of the middle of the robot, and 8" above ground level.
 
         final float CAMERA_FORWARD_DISPLACEMENT  = 4.0f * mmPerInch;   // eg: Camera is 4 Inches in front of robot-center
         final float CAMERA_VERTICAL_DISPLACEMENT = 8.0f * mmPerInch;   // eg: Camera is 8 Inches above ground
@@ -158,29 +167,18 @@ public class CameraSubsystem extends SubsystemBase {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setCameraLocationOnRobot(parameters.cameraName, cameraLocationOnRobot);
         }
 
-        targetsUltimateGoal.activate();
-        TFObjectDetector.activate();
+        // WARNING:
+        // In this sample, we do not wait for PLAY to be pressed.  Target Tracking is   started immediately when INIT is pressed.
+        // This sequence is used to enable the new remote DS Camera Preview feature to be used with this sample.
+        // CONSEQUENTLY do not put any driving commands in this loop.
+        // To restore the normal opmode structure, just un-comment the following line:
 
-        // The TensorFlow software will scale the input images from the camera to a lower resolution.
-        // This can result in lower detection accuracy at longer distances (> 55cm or 22").
-        // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
-        // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
-        // should be set to the value of the images used to create the TensorFlow Object Detection model
-        // (typically 16/9).
-        TFObjectDetector.setZoom(1, 16.0/9.0);
+        // waitForStart();
 
+        // Note: To use the remote camera preview:
+        // AFTER you hit Init on the Driver Station, use the "options menu" to select "Camera Stream"
+        // Tap the preview window to receive a fresh image.
 
-        registerSubsystem();
-    }
-
-    public void switchToIntakeCam()
-    {
-        switchableCamera.setActiveCamera(intakeWebcam);
-    }
-
-    public void switchToShooterCam()
-    {
-        switchableCamera.setActiveCamera(shooterWebcam);
     }
 
     public OpenGLMatrix vuforiaGetTransformationMatrix(String targetName)
@@ -291,10 +289,9 @@ public class CameraSubsystem extends SubsystemBase {
         return cameraSubsystem;
     }
 
-    @Override
     public void periodic() {
-        telemetry.addData("Tower Goal Angle: ", vuforiaGetAngleTowerGoal());
-        telemetry.addData("Tower Goal Distance: ", vuforiaGetDistanceTowerGoal());
+        RobotMap.getInstance().getTelemtry().addData("Tower Goal Angle: ", vuforiaGetAngleTowerGoal());
+        RobotMap.getInstance().getTelemtry().addData("Tower Goal Distance: ", vuforiaGetDistanceTowerGoal());
 
     }
 }

@@ -29,11 +29,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.commands.autonomous.FirstPathAutonomousCommand;
+import org.firstinspires.ftc.teamcode.commands.autonomous.StrafeRightPathAutonomousCommand;
+import org.firstinspires.ftc.teamcode.commands.autonomous.StraightPathAutonomousCommand;
 import org.firstinspires.ftc.teamcode.commands.drivetrain.DriveTrainCommand;
 import org.firstinspires.ftc.teamcode.commands.drivetrain.RingStackCommand;
 import org.firstinspires.ftc.teamcode.commands.drivetrain.ShooterVisionCommand;
@@ -49,7 +51,6 @@ import org.ma.ftc.lib.command.CommandScheduler;
 import org.ma.ftc.lib.command.MAGamepad;
 import org.ma.ftc.lib.command.RobotMap;
 import org.ma.ftc.lib.control.MAPath;
-import org.ma.ftc.lib.control.MecanumDrive;
 
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
@@ -65,8 +66,8 @@ import org.ma.ftc.lib.control.MecanumDrive;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Main Opmode", group = "Iterative Opmode")
-public class OpModeMain extends OpMode {
+@Autonomous(name = "Red Left", group = "Iterative Opmode")
+public class RedAllianceLeft extends OpMode {
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
 
@@ -78,82 +79,20 @@ public class OpModeMain extends OpMode {
      * Code to run ONCE when the driver hits INIT
      */
 
+
     public void init() {
         driveGamepad = new MAGamepad(gamepad1);
         systemGamepad = new MAGamepad(gamepad2);
         RobotMap.getInstance().init(hardwareMap, telemetry, runtime, driveGamepad, systemGamepad);
 
-
+        CameraSubsystem.cameraSubsystem = null;
         CommandScheduler.getInstance().clearButtons();
 //        CommandScheduler.getInstance().clearSubsystems();
         CommandScheduler.getInstance().clearCommands();
-
+        CameraSubsystem.getInstance();
         MecanumDriveSubsystem.getInstance().reset();
 
-        systemGamepad.X.whileActiveOnce(new IntakeMotorCommand(0.6));
-        systemGamepad.B.whileActiveOnce(new IntakeMotorCommand(-0.6));
-        systemGamepad.A.whileActiveOnce(new ShooterPIDCommand(-2600));
-        systemGamepad.DPAD_RIGHT.whileActiveContinuous(new RingStackCommand());
-
-        systemGamepad.DPAD_DOWN.whenActive(new Runnable() {
-            @Override
-            public void run() {
-                ShooterSubsystem shooterSubsystem = ShooterSubsystem.getInstance();
-                if (shooterSubsystem.isReset()) {
-                    shooterSubsystem.loadToFlywheel();
-                } else {
-                    shooterSubsystem.resetServo();
-                }
-            }
-        });
-
-        systemGamepad.DPAD_UP.whenActive(new Runnable() {
-            @Override
-            public void run() {
-                WobbleSubsystem wobbleSubsystem = WobbleSubsystem.getInstance();
-                if (wobbleSubsystem.isOpen()) {
-                    wobbleSubsystem.closeClaw();
-                } else {
-                    wobbleSubsystem.openClaw();
-                }
-            }
-        });
-
-        systemGamepad.RIGHT_BUMPER.whenActive(new Runnable() {
-            @Override
-            public void run() {
-                ShooterSubsystem.getInstance().SETPOINT += 25;
-                ShooterSubsystem.getInstance().setSetpoint(ShooterSubsystem.getInstance().SETPOINT);
-            }
-        });
-
-        systemGamepad.DPAD_LEFT.whenActive(new Runnable() {
-            @Override
-            public void run() {
-                ShooterSubsystem.getInstance().VISION = !ShooterSubsystem.getInstance().VISION;
-            }
-        });
-
-        systemGamepad.LEFT_BUMPER.whenActive(new Runnable() {
-            @Override
-            public void run() {
-                ShooterSubsystem.getInstance().SETPOINT -= 25;
-                ShooterSubsystem.getInstance().setSetpoint(ShooterSubsystem.getInstance().SETPOINT);
-            }
-        });
-
-        driveGamepad.DPAD_DOWN.whileActiveOnce(new MAPath(0.7));
-        driveGamepad.Y.whileActiveOnce(new FirstPathAutonomousCommand());
-        driveGamepad.A.whileActiveOnce(new ShooterVisionCommand());
-
-
-        CameraSubsystem.getInstance();
-
-//        CommandScheduler.getInstance().schedule(new FirstPathAutonomousCommand());
-
-        CommandScheduler.getInstance().setDefaultCommand(new DriveTrainCommand());
-        CommandScheduler.getInstance().setDefaultCommand(new WobbleMotorCommand());
-
+        CommandScheduler.getInstance().schedule(new StraightPathAutonomousCommand());
     }
 
     /*
@@ -169,6 +108,8 @@ public class OpModeMain extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        CameraSubsystem.getInstance().targetsUltimateGoal.activate();
+
     }
 
     /*
@@ -177,6 +118,7 @@ public class OpModeMain extends OpMode {
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
+        CameraSubsystem.getInstance().periodic();
         telemetry.update();
         telemetry.clearAll();
     }
@@ -186,6 +128,7 @@ public class OpModeMain extends OpMode {
      */
     @Override
     public void stop() {
+        CameraSubsystem.getInstance().targetsUltimateGoal.deactivate();
     }
 
 }
