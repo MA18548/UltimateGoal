@@ -18,7 +18,7 @@ import org.ma.ftc.lib.geometry.Vector2D;
 
 public class MecanumDriveSubsystem extends SubsystemBase {
 
-    private static MecanumDriveSubsystem mecanumDriveSubsystem;
+    private static MecanumDriveSubsystem mecanumDriveSubsystem = null;
 
     private Movement currentMovement;
 
@@ -29,6 +29,7 @@ public class MecanumDriveSubsystem extends SubsystemBase {
 
     private final PIDController distancePID;
     private final PIDController anglePID;
+    private final PIDController angleVisionPID;
     private final PIDController robotAnglePID;
 
     private final NavxMicroNavigationSensor navxMicro;
@@ -73,6 +74,7 @@ public class MecanumDriveSubsystem extends SubsystemBase {
                                         rightFrontMotor, rightBackMotor);
 
         anglePID = new PIDController(0, 3, 3.1e-2, 0, 3e-5, 0.001);
+        angleVisionPID = new PIDController(0, 3, 3.125e-2, 1e-8, 3e-5, 0.001);
         robotAnglePID = new PIDController(0, 3, 1.8e-2, 0, 5e-3, 0);
         distancePID = new PIDController(0, 60, 1e-2, 0, 2e-5, 0.001);
 
@@ -223,6 +225,9 @@ public class MecanumDriveSubsystem extends SubsystemBase {
 
     public double getAnglePID(double input) {
         return anglePID.getPID(input);
+    }
+    public double getAngleVisionPID(double input) {
+        return angleVisionPID.getPID(input);
     }
 
     public double getDistanceError() {

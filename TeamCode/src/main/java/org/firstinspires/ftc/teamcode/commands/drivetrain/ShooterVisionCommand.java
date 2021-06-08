@@ -27,7 +27,7 @@ public class ShooterVisionCommand extends CommandBase {
 
     @Override
     public void execute() {
-        mecanumDriveSubsystem.arcadeDrive(-1.31*mecanumDriveSubsystem.getAnglePID(CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()),
+        mecanumDriveSubsystem.arcadeDrive(-mecanumDriveSubsystem.getAngleVisionPID(CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()),
                 0);
     }
 

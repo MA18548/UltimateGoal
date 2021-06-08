@@ -53,12 +53,13 @@ public class StrafeRightPathAutonomousCommand extends CommandBase {
                     MAPath.end(true);
                     shooterVisionCommand.initialize();
                     stage++;
+                    time = timer.seconds();
                 }
                 break;
 
             case 1:
                 shooterVisionCommand.execute();
-                if(shooterVisionCommand.isFinished()){
+                if(shooterVisionCommand.isFinished() || timer.seconds() - time >= 2.7){
                     shooterVisionCommand.end(true);
                     shootingCommand.initialize();
                     stage++;
@@ -68,7 +69,7 @@ public class StrafeRightPathAutonomousCommand extends CommandBase {
 
             case 2:
                 shootingCommand.execute();
-                if(timer.seconds() - time >= 3.5){
+                if(timer.seconds() - time >= 4.5){
                     shootingCommand.end(true);
                     time = timer.seconds();
                     stage++;
@@ -77,7 +78,7 @@ public class StrafeRightPathAutonomousCommand extends CommandBase {
                 break;
             case 3:
                 MecanumDriveSubsystem.getInstance().arcadeDrive(0, 0.65);
-                if(timer.seconds() - time >= 0.77){
+                if(timer.seconds() - time >= 0.73){
                     MecanumDriveSubsystem.getInstance().stop();
                     stage++;
                     isFinished = true;

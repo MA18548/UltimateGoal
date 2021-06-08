@@ -16,7 +16,7 @@ import org.ma.ftc.lib.control.PIDController;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private static ShooterSubsystem shooterSubsystem;
+    private static ShooterSubsystem shooterSubsystem = null;
 
     private final DcMotorEx flyWheel;
     private final Servo servo;

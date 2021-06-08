@@ -32,14 +32,12 @@ public class MAPath extends CommandBase {
 
     private boolean isFinished;
 
-    private Movement[][] paths = {Path.testPath, Path.testPath2};
-
     public MAPath(double waitTime) {
         this.waitTime = waitTime;
         chassis = MecanumDriveSubsystem.getInstance();
         timer = RobotMap.getInstance().getRuntime();
         addRequirements(chassis);
-        Path.mainPath = Path.testPath;
+        Path.mainPath = Path.moveStraight;
     }
 
     @Override
