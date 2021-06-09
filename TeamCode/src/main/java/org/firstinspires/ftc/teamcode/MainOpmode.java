@@ -39,6 +39,7 @@ import org.firstinspires.ftc.teamcode.commands.drivetrain.RingStackCommand;
 import org.firstinspires.ftc.teamcode.commands.drivetrain.ShooterVisionCommand;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeMotorCommand;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShooterPIDCommand;
+import org.firstinspires.ftc.teamcode.commands.shooter.ShooterPowershotCommand;
 import org.firstinspires.ftc.teamcode.commands.wobble.WobbleMotorCommand;
 import org.firstinspires.ftc.teamcode.subsystems.CameraSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
@@ -93,21 +94,8 @@ public class MainOpmode extends OpMode {
         systemGamepad.X.whileActiveOnce(new IntakeMotorCommand(0.69));
         systemGamepad.B.whileActiveOnce(new IntakeMotorCommand(-0.69));
         systemGamepad.A.whileActiveOnce(new ShooterPIDCommand(-2600));
-        systemGamepad.Y.whenActive(new Runnable() {
-            @Override
-            public void run() {
-                ShooterSubsystem shooterSubsystem = ShooterSubsystem.getInstance();
-                shooterSubsystem.setMotor(.3);
-            }
-        }).whenInactive(new Runnable() {
-            @Override
-            public void run() {
-                ShooterSubsystem shooterSubsystem = ShooterSubsystem.getInstance();
-                shooterSubsystem.setMotor(.3);
-            }
-        });
+        systemGamepad.Y.whileActiveOnce(new ShooterPowershotCommand(-1855));
 
-        systemGamepad.DPAD_RIGHT.whileActiveContinuous(new RingStackCommand());
 
         systemGamepad.DPAD_DOWN.whenActive(new Runnable() {
             @Override

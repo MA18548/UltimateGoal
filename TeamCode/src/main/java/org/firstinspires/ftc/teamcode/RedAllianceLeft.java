@@ -92,7 +92,7 @@ public class RedAllianceLeft extends OpMode {
         CameraSubsystem.getInstance();
         MecanumDriveSubsystem.getInstance().reset();
 
-        CommandScheduler.getInstance().schedule(new StraightPathAutonomousCommand());
+        CommandScheduler.getInstance().schedule(new StrafeRightPathAutonomousCommand());
     }
 
     /*

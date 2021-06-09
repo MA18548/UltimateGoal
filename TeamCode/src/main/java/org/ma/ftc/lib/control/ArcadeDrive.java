@@ -28,6 +28,7 @@ package org.ma.ftc.lib.control; /* MA FTC 18548
  */
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -58,6 +59,7 @@ import org.ma.ftc.lib.MathUtil;
  */
 
 @TeleOp(name = "18548 - Arcade Drive", group = "Iterative Opmode")
+@Disabled
 public class ArcadeDrive extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime;

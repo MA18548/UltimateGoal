@@ -22,7 +22,7 @@ public class WobbleMotorCommand extends CommandBase {
 
     @Override
     public void execute() {
-            wobbleSubsystem.setMotor(RobotMap.getInstance().getSystemGamepad().getLeftY() * 0.4);
+            wobbleSubsystem.setMotor(RobotMap.getInstance().getSystemGamepad().getLeftY());
     }
 
     @Override
