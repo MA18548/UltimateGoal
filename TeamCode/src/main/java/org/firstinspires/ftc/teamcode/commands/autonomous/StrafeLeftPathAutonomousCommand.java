@@ -51,13 +51,14 @@ public class StrafeLeftPathAutonomousCommand extends CommandBase {
                 if (MAPath.isFinished()) {
                     MAPath.end(true);
                     shooterVisionCommand.initialize();
+                    time = timer.seconds();
                     stage++;
                 }
                 break;
 
             case 1:
                 shooterVisionCommand.execute();
-                if(shooterVisionCommand.isFinished()){
+                if(shooterVisionCommand.isFinished() || timer.seconds() - time >= 2.6){
                     shooterVisionCommand.end(true);
                     shootingCommand.initialize();
                     stage++;
@@ -67,7 +68,7 @@ public class StrafeLeftPathAutonomousCommand extends CommandBase {
 
             case 2:
                 shootingCommand.execute();
-                if(timer.seconds() - time >= 3.5){
+                if(timer.seconds() - time >= 5.5){
                     shootingCommand.end(true);
                     time = timer.seconds();
                     stage++;

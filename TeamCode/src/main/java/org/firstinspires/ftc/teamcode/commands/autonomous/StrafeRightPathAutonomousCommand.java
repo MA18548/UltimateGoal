@@ -69,7 +69,7 @@ public class StrafeRightPathAutonomousCommand extends CommandBase {
 
             case 2:
                 shootingCommand.execute();
-                if(timer.seconds() - time >= 4.5){
+                if(timer.seconds() - time >= 5.5){
                     shootingCommand.end(true);
                     time = timer.seconds();
                     stage++;
