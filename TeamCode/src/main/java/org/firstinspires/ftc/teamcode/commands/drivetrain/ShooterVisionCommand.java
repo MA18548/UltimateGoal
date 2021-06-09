@@ -38,6 +38,6 @@ public class ShooterVisionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()) <= 1.6;
+        return Math.abs(CameraSubsystem.getInstance().vuforiaGetAngleTowerGoal()) <= 1.25;
     }
 }
