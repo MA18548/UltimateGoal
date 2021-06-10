@@ -11,7 +11,7 @@ public class Path {
                                                     .getPath();
 
     public static final Movement[] moveStraight = {
-        new Movement(MovementType.TANK, 4.75, 0, 30, 5, 1, 1.2, 0.3),
+        new Movement(MovementType.TANK, 4.75, 0, 30, 5, 1, 1.2, 0),
     };
 
     public static final Movement[] strafeRight = {
