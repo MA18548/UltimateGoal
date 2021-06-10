@@ -28,7 +28,7 @@ public class ShooterSubsystem extends SubsystemBase {
     private final double MIN_SERVO_POS = 0; // TODO
     private boolean servoReset;
 
-    public int SETPOINT = -2095;
+    public int SETPOINT = -1977;
     public boolean VISION = true;
 
     private ShooterSubsystem() {

@@ -94,7 +94,7 @@ public class MainOpmode extends OpMode {
         systemGamepad.X.whileActiveOnce(new IntakeMotorCommand(0.69));
         systemGamepad.B.whileActiveOnce(new IntakeMotorCommand(-0.69));
         systemGamepad.A.whileActiveOnce(new ShooterPIDCommand(-2600));
-        systemGamepad.Y.whileActiveOnce(new ShooterPowershotCommand(-1855));
+        systemGamepad.Y.whileActiveOnce(new ShooterPowershotCommand(-1765));
 
 
         systemGamepad.DPAD_DOWN.whenActive(new Runnable() {
