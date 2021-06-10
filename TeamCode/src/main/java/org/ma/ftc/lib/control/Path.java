@@ -11,16 +11,16 @@ public class Path {
                                                     .getPath();
 
     public static final Movement[] moveStraight = {
-        new Movement(MovementType.TANK, 5.38, 0, 30, 5, 1, 1.2, 0.3),
+        new Movement(MovementType.TANK, 4.75, 0, 30, 5, 1, 1.2, 0.3),
     };
 
     public static final Movement[] strafeRight = {
-            new Movement(MovementType.TANK, 5.05, 0, 30, 5, 1, 1.2, 0),
+            new Movement(MovementType.TANK, 4.85, 0, 30, 5, 1, 1.2, 0),
             new Movement(MovementType.STRAFE, 1.3, 0, 30, 5, 0.8, 1, 0),
     };
 
     public static final Movement[] strafeLeft = {
-            new Movement(MovementType.TANK, 5.05, 0, 30, 5, 1, 1.2, 0),
+            new Movement(MovementType.TANK, 4.85, 0, 30, 5, 1, 1.2, 0),
             new Movement(MovementType.STRAFE, 1.3, 180, 30, 5, 0.8, 1, 0),
     };
 

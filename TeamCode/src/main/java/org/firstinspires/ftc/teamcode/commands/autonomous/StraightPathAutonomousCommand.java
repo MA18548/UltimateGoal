@@ -79,7 +79,7 @@ public class StraightPathAutonomousCommand extends CommandBase {
                 }
                 break;
             case 3:
-                MecanumDriveSubsystem.getInstance().arcadeDrive(0, 0.65);
+                MecanumDriveSubsystem.getInstance().arcadeDrive(0, -0.65);
                 if(timer.seconds() - time >= 0.5){
                     MecanumDriveSubsystem.getInstance().stop();
                     stage++;
