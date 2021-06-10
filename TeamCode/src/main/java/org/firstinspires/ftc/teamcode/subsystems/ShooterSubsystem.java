@@ -56,7 +56,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public double getRPMByDistance(double distance)
     {
-        return distance > 2650 ? -2095 : -1 * (0.0015 * (Math.pow(distance, 2)) - 6.5231 * distance + 9180.4);
+        return distance > 2650 ? -2095 : -1 * (0.0015 * (Math.pow(distance, 2)) - 6.5231 * distance + 8920.4);
     }
 
     public void setMotor(double power) {

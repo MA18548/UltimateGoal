@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.commands.autonomous.StrafeLeftPathAutonomousCommand;
 import org.firstinspires.ftc.teamcode.commands.autonomous.StrafeRightPathAutonomousCommand;
 import org.firstinspires.ftc.teamcode.commands.autonomous.StraightPathAutonomousCommand;
 import org.firstinspires.ftc.teamcode.commands.drivetrain.DriveTrainCommand;
@@ -92,7 +93,7 @@ public class BlueAllianceLeft extends OpMode {
         CameraSubsystem.getInstance();
         MecanumDriveSubsystem.getInstance().reset();
 
-        CommandScheduler.getInstance().schedule(new StraightPathAutonomousCommand());
+        CommandScheduler.getInstance().schedule(new StrafeLeftPathAutonomousCommand());
     }
 
     /*
